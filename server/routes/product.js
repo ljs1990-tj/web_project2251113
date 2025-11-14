@@ -45,4 +45,23 @@ router.post("/", async (req, res) => {
     }
 })
 
+router.put("/:productId", async (req, res) => {
+    let {productId} = req.params;
+    let {productName, price, category} = req.body;
+    try {
+        let sql = "UPDATE TBL_PRODUCT SET "
+                + "PRODUCTNAME = ?, "
+                + "PRICE = ?, "
+                + "CATEGORY = ? "
+                + "WHERE PRODUCTID = ?";
+        let result = await db.query(sql, [productName, price, category, productId]);
+        res.json({
+            result : result,
+            msg : "success"
+        });
+    } catch (error) {
+        console.log("에러 발생!");
+    }
+})
+
 module.exports = router;
