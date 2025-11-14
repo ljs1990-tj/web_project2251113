@@ -84,6 +84,36 @@ app.post('/student', async (req, res) => {
     }
 })
 
+app.post('/student/login', async (req, res) => {
+    let {stuNo, stuName} = req.body
+    console.log(req.body);
+    try {
+        let sql = "SELECT * FROM STUDENT WHERE STU_NO = ?";
+        let [list] = await db.query(sql, [stuNo]);
+        let msg = "";
+        let result = "fail";
+        if(list.length > 0){
+            // 학번으로 조회 성공
+            if(list[0].stu_name == stuName){
+                msg = list[0].stu_name + "님 환영합니다!";
+                result = "success";
+            } else {
+                msg = "해당 이름을 가진 학생이 없습니다.";
+            }
+        } else {
+            // 학번 조회 실패
+            msg = "학번을 확인해주세요.";
+        }
+        console.log(list);
+        res.json({
+            msg : msg,
+            result : result
+        });
+    } catch (error) {
+        console.log("에러 발생!");
+    }
+})
+
 app.listen(3000, ()=>{
     console.log("server start!");
 })
